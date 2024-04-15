@@ -1,0 +1,32 @@
+#STUDENT_INFO DATA
+##LOAD THE DATA
+student_info = read.csv("D:/Karan/studentInfo.csv")
+
+##CHECK THE DATA
+head(student_info)
+
+##SUMMARY OF THE DATA
+summary(student_info)
+
+##DATA PROCESSING, EXPLOARTION & ANALYSIS
+sapply(student_info, class) #Gives us the class of each column
+
+##TRAIN THE MODEL
+student_info$final_result = ifelse(student_info$final_result == "PASS", 0, 1)
+model = glm(final_result ~ id_student, data = student_info, family = "binomial")
+
+##PREDICT 
+predicted = predict(model, type = "response")
+
+##CONVERT PREDICTED VALUES (0 or 1)
+predicted = ifelse(predicted > 0.5, 1, 0)
+length(predicted)
+
+##CALCULATE ACCURACY
+accuracy = mean(predicted)
+
+##PLOT USING GGPLOT
+plot = data.frame(x = c("accuracy"), y = c(accuracy))
+library(ggplot2)
+ggplot(plot, aes(x = x, y = y, fill = x)) + 
+  geom_bar(stat = "identity")
